@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import ExpenseForm from "./components/ExpenseForm";
+import ExpenseTable from "./components/ExpenseTable";
+import SearchBar from "./components/SearchBar"; // Ensure the SearchBar component is imported
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [expenses, setExpenses] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // Fix missing useState import
+
+  // Filter expenses based on search term
+  const filteredExpenses = expenses.filter(
+    (expense) =>
+      expense.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      expense.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      expense.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const addExpense = (newExpense) => {
+    setExpenses([...expenses, newExpense]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      <h1>Expense Tracker</h1>
+      <p className="subheading">Start taking control of your finances and life. Record, categorize and analyze your spending.</p>
+      <SearchBar onSearch={setSearchTerm} /> {/* Ensure the SearchBar exists */}
+      <div className="content">
+        <ExpenseForm addExpense={addExpense} />
+        <ExpenseTable expenses={filteredExpenses} />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
